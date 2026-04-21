@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS申请系统</title>
+    <title>通付宝POS申请系统</title>
     <style>
         * {
             box-sizing: border-box;
@@ -78,20 +78,7 @@
             margin-top: 5px;
         }
         
-        .qrcode-section {
-            margin-top: 40px;
-            text-align: center;
-        }
-        
-        #qrcode {
-            display: inline-block;
-            margin: 20px 0;
-        }
-        
-        .qrcode-section p {
-            color: #666;
-            margin-top: 10px;
-        }
+       
         
         .success-message {
             display: none;
@@ -110,17 +97,14 @@
                 padding: 15px;
             }
             
-            #qrcode img {
-                width: 150px;
-                height: 150px;
-            }
+           
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>POS机申请表单</h1>
-        <form id="posForm">
+        <h1>通付宝POS机申请表单</h1>
+        <form id="posForm" data-netlify="true">
             <div class="form-group">
                 <label for="merchantName">商户名称 *</label>
                 <input type="text" id="merchantName" name="merchantName" required>
@@ -178,15 +162,7 @@
             
             <button type="submit" class="submit-btn">提交申请</button>
         </form>
-        
-        <div class="qrcode-section">
-            <h2>扫码申请</h2>
-            <!-- 使用Google Charts API生成二维码 -->
-            <div id="qrcode">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=file:///C:/Users/wdseg/Desktop/ai开发/soujixinxi/final_pos.html" alt="二维码">
-            </div>
-            <p>扫描二维码直接访问本申请页面</p>
-        </div>
+      
         
         <div id="successMessage" class="success-message">
             尊敬的用户，您的POS申请，我们已经收到，会有工作人员与你联系，请保持电话畅通。
