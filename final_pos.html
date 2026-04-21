@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS申请系统</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .error-message {
+            display: block;
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .qrcode-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        #qrcode {
+            display: inline-block;
+            margin: 20px 0;
+        }
+        
+        .qrcode-section p {
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .success-message {
+            display: none;
+            background-color: #27ae60;
+            color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            #qrcode img {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>POS机申请表单</h1>
+        <form id="posForm">
+            <div class="form-group">
+                <label for="merchantName">商户名称 *</label>
+                <input type="text" id="merchantName" name="merchantName" required>
+                <span class="error-message" id="merchantNameError"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="contactPerson">联系人 *</label>
+                <input type="text" id="contactPerson" name="contactPerson" required>
+                <span class="error-message" id="contactPersonError"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">联系电话 *</label>
+                <input type="tel" id="phone" name="phone" required>
+                <span class="error-message" id="phoneError"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="businessAddress">经营地址 *</label>
+                <textarea id="businessAddress" name="businessAddress" rows="3" required></textarea>
+                <span class="error-message" id="businessAddressError"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="businessType">经营类型 *</label>
+                <select id="businessType" name="businessType" required>
+                    <option value="">请选择</option>
+                    <option value="零售">零售</option>
+                    <option value="餐饮">餐饮</option>
+                    <option value="娱乐">娱乐</option>
+                    <option value="医疗">医疗</option>
+                    <option value="其他">其他</option>
+                </select>
+                <span class="error-message" id="businessTypeError"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="idCard">身份证号 *</label>
+                <input type="text" id="idCard" name="idCard" required>
+                <span class="error-message" id="idCardError"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="bankCard">银行卡号 *</label>
+                <input type="text" id="bankCard" name="bankCard" required>
+                <span class="error-message" id="bankCardError"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="bankName">开户银行 *</label>
+                <input type="text" id="bankName" name="bankName" required>
+                <span class="error-message" id="bankNameError"></span>
+            </div>
+            
+            <button type="submit" class="submit-btn">提交申请</button>
+        </form>
+        
+        <div class="qrcode-section">
+            <h2>扫码申请</h2>
+            <!-- 使用Google Charts API生成二维码 -->
+            <div id="qrcode">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=file:///C:/Users/wdseg/Desktop/ai开发/soujixinxi/final_pos.html" alt="二维码">
+            </div>
+            <p>扫描二维码直接访问本申请页面</p>
+        </div>
+        
+        <div id="successMessage" class="success-message">
+            尊敬的用户，您的POS申请，我们已经收到，会有工作人员与你联系，请保持电话畅通。
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('posForm');
+            const successMessage = document.getElementById('successMessage');
+            
+            // 表单提交事件
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    const formData = collectFormData();
+                    saveData(formData);
+                    exportToCSV(formData);
+                    form.reset();
+                    showSuccessMessage();
+                }
+            });
+            
+            // 表单验证
+            function validateForm() {
+                let isValid = true;
+                
+                // 验证商户名称
+                const merchantName = document.getElementById('merchantName').value.trim();
+                if (!merchantName) {
+                    showError('merchantNameError', '请输入商户名称');
+                    isValid = false;
+                } else {
+                    hideError('merchantNameError');
+                }
+                
+                // 验证联系人
+                const contactPerson = document.getElementById('contactPerson').value.trim();
+                if (!contactPerson) {
+                    showError('contactPersonError', '请输入联系人');
+                    isValid = false;
+                } else {
+                    hideError('contactPersonError');
+                }
+                
+                // 验证联系电话
+                const phone = document.getElementById('phone').value.trim();
+                const phoneRegex = /^1[3-9]\d{9}$/;
+                if (!phone) {
+                    showError('phoneError', '请输入联系电话');
+                    isValid = false;
+                } else if (!phoneRegex.test(phone)) {
+                    showError('phoneError', '请输入有效的联系电话');
+                    isValid = false;
+                } else {
+                    hideError('phoneError');
+                }
+                
+                // 验证经营地址
+                const businessAddress = document.getElementById('businessAddress').value.trim();
+                if (!businessAddress) {
+                    showError('businessAddressError', '请输入经营地址');
+                    isValid = false;
+                } else {
+                    hideError('businessAddressError');
+                }
+                
+                // 验证经营类型
+                const businessType = document.getElementById('businessType').value;
+                if (!businessType) {
+                    showError('businessTypeError', '请选择经营类型');
+                    isValid = false;
+                } else {
+                    hideError('businessTypeError');
+                }
+                
+                // 验证身份证号
+                const idCard = document.getElementById('idCard').value.trim();
+                const idCardRegex = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]$/;
+                if (!idCard) {
+                    showError('idCardError', '请输入身份证号');
+                    isValid = false;
+                } else if (!idCardRegex.test(idCard)) {
+                    showError('idCardError', '请输入有效的身份证号');
+                    isValid = false;
+                } else {
+                    hideError('idCardError');
+                }
+                
+                // 验证银行卡号
+                const bankCard = document.getElementById('bankCard').value.trim();
+                const bankCardRegex = /^\d{16,19}$/;
+                if (!bankCard) {
+                    showError('bankCardError', '请输入银行卡号');
+                    isValid = false;
+                } else if (!bankCardRegex.test(bankCard)) {
+                    showError('bankCardError', '请输入有效的银行卡号');
+                    isValid = false;
+                } else {
+                    hideError('bankCardError');
+                }
+                
+                // 验证开户银行
+                const bankName = document.getElementById('bankName').value.trim();
+                if (!bankName) {
+                    showError('bankNameError', '请输入开户银行');
+                    isValid = false;
+                } else {
+                    hideError('bankNameError');
+                }
+                
+                return isValid;
+            }
+            
+            // 显示错误信息
+            function showError(elementId, message) {
+                document.getElementById(elementId).textContent = message;
+            }
+            
+            // 隐藏错误信息
+            function hideError(elementId) {
+                document.getElementById(elementId).textContent = '';
+            }
+            
+            // 收集表单数据
+            function collectFormData() {
+                const merchantName = document.getElementById('merchantName').value.trim();
+                const contactPerson = document.getElementById('contactPerson').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const businessAddress = document.getElementById('businessAddress').value.trim();
+                const businessType = document.getElementById('businessType').value;
+                const idCard = document.getElementById('idCard').value.trim();
+                const bankCard = document.getElementById('bankCard').value.trim();
+                const bankName = document.getElementById('bankName').value.trim();
+                const submitTime = new Date().toLocaleString();
+                
+                return {
+                    merchantName,
+                    contactPerson,
+                    phone,
+                    businessAddress,
+                    businessType,
+                    idCard,
+                    bankCard,
+                    bankName,
+                    submitTime
+                };
+            }
+            
+            // 保存数据到本地存储
+            function saveData(formData) {
+                try {
+                    let data = JSON.parse(localStorage.getItem('posApplicationData')) || [];
+                    data.push(formData);
+                    localStorage.setItem('posApplicationData', JSON.stringify(data));
+                    
+                    // 创建备份
+                    createBackup(data);
+                } catch (error) {
+                    console.error('保存数据失败:', error);
+                    alert('保存数据失败，请稍后重试');
+                }
+            }
+            
+            // 加载本地存储的数据
+            function loadData() {
+                try {
+                    const data = JSON.parse(localStorage.getItem('posApplicationData')) || [];
+                    return data;
+                } catch (error) {
+                    console.error('加载数据失败:', error);
+                    return [];
+                }
+            }
+            
+            // 创建数据备份
+            function createBackup(data) {
+                try {
+                    const backupData = {
+                        timestamp: new Date().toISOString(),
+                        data: data
+                    };
+                    localStorage.setItem('posApplicationBackup', JSON.stringify(backupData));
+                } catch (error) {
+                    console.error('创建备份失败:', error);
+                }
+            }
+            
+            // 导出数据为CSV文件
+            function exportToCSV(formData) {
+                try {
+                    // 获取所有数据
+                    const allData = loadData();
+                    
+                    // CSV表头
+                    const headers = ['商户名称', '联系人', '联系电话', '经营地址', '经营类型', '身份证号', '银行卡号', '开户银行', '提交时间'];
+                    
+                    // 转换数据为CSV行
+                    const csvContent = [
+                        headers.join(','),
+                        ...allData.map(item => [
+                            item.merchantName,
+                            item.contactPerson,
+                            item.phone,
+                            item.businessAddress,
+                            item.businessType,
+                            item.idCard,
+                            item.bankCard,
+                            item.bankName,
+                            item.submitTime
+                        ].join(','))
+                    ].join('\n');
+                    
+                    // 创建Blob对象
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // 创建下载链接
+                    const link = document.createElement('a');
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', `pos_application_${new Date().toISOString().split('T')[0]}.csv`);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } catch (error) {
+                    console.error('导出CSV失败:', error);
+                }
+            }
+            
+            // 显示成功消息
+            function showSuccessMessage() {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
