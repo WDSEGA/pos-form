@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>通付宝POS申请系统</title>
+    <title>POS申请系统</title>
     <style>
         * {
             box-sizing: border-box;
@@ -78,8 +78,6 @@
             margin-top: 5px;
         }
         
-       
-        
         .success-message {
             display: none;
             background-color: #27ae60;
@@ -96,15 +94,13 @@
                 margin: 10px;
                 padding: 15px;
             }
-            
-           
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>通付宝POS机申请表单</h1>
-        <form id="posForm" data-netlify="true">
+        <h1>通付宝POS申请系统</h1>
+        <form id="posForm">
             <div class="form-group">
                 <label for="merchantName">商户名称 *</label>
                 <input type="text" id="merchantName" name="merchantName" required>
@@ -162,7 +158,6 @@
             
             <button type="submit" class="submit-btn">提交申请</button>
         </form>
-      
         
         <div id="successMessage" class="success-message">
             尊敬的用户，您的POS申请，我们已经收到，会有工作人员与你联系，请保持电话畅通。
@@ -175,33 +170,38 @@
             
             // 表单提交事件
             form.addEventListener('submit', function(e) {
-              
                 e.preventDefault();
+                
                 if (validateForm()) {
                     const formData = collectFormData();
                     saveData(formData);
-                    exportToCSV(formData);
-
-// 提交到Netlify
-    const netlifyForm = new FormData(form);
-    fetch('/', {
-      method: 'POST',
-      body: netlifyForm,
-      headers: {
-        'X-Netlify-Recaptcha': 'false'
-      }
-    })
-    .then(response => {
                     
-                    form.reset();
+                    // 显示成功提示
                     showSuccessMessage();
-        })
-    .catch(error => {
-      console.error('提交失败:', error);
-    });
-  }
-});
-            
+                    
+                    // 提交到Netlify
+                    const netlifyForm = new FormData(form);
+                    fetch('/', {
+                        method: 'POST',
+                        body: netlifyForm,
+                        headers: {
+                            'X-Netlify-Recaptcha': 'false'
+                        }
+                    })
+                    .then(response => {
+                        console.log('数据提交成功');
+                    })
+                    .catch(error => {
+                        console.error('提交失败:', error);
+                    });
+                    
+                    // 延迟执行文件下载，确保成功提示能够显示
+                    setTimeout(() => {
+                        exportToCSV(formData);
+                        form.reset();
+                    }, 1500);
+                }
+            });
             
             // 表单验证
             function validateForm() {
@@ -415,7 +415,7 @@
                 successMessage.style.display = 'block';
                 setTimeout(() => {
                     successMessage.style.display = 'none';
-                }, 5000);
+                }, 8000); // 延长显示时间到8秒
             }
         });
     </script>
