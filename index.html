@@ -100,7 +100,7 @@
 <body>
     <div class="container">
         <h1>通付宝POS申请系统</h1>
-        <form id="posForm" data-netlify="true">
+        <form id="posForm" action="/" method="POST" data-netlify="true">
             <div class="form-group">
                 <label for="merchantName">商户名称 *</label>
                 <input type="text" id="merchantName" name="merchantName" required>
@@ -185,21 +185,19 @@
                         method: 'POST',
                         body: netlifyForm,
                         headers: {
-                            'X-Netlify-Recaptcha': 'false'
+                            'Accept': 'application/json'
                         }
                     })
                     .then(response => {
                         console.log('数据提交成功');
+                        // 延迟重置表单，确保成功提示能够显示
+                        setTimeout(() => {
+                            form.reset();
+                        }, 1500);
                     })
                     .catch(error => {
                         console.error('提交失败:', error);
                     });
-                    
-                    // 延迟执行文件下载，确保成功提示能够显示
-                    setTimeout(() => {
-                        exportToCSV(formData);
-                        form.reset();
-                    }, 1500);
                 }
             });
             
