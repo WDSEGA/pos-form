@@ -27,7 +27,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1, h2 {
+        h1 {
             color: #2c3e50;
             margin-bottom: 20px;
             text-align: center;
@@ -203,11 +203,8 @@
 <body>
     <div class="container">
         <h1>通付宝POS申请系统</h1>
-        <form id="posForm" name="posForm" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?success=true">
+        <form id="posForm" name="posForm" method="POST" action="/?success=true" enctype="multipart/form-data" data-netlify="true">
             <input type="hidden" name="form-name" value="posForm">
-            <p style="display:none;">
-                <label>不要填写这个: <input name="bot-field"></label>
-            </p>
             
             <div class="form-group">
                 <label for="merchantName">商户名称 *</label>
@@ -266,7 +263,7 @@
 
             <div class="upload-group">
                 <label for="idCardFront">上传身份证正面照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB，需清晰展示身份证人像面所有信息</div>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB</div>
                 <div class="file-upload-wrapper">
                     <button type="button" class="upload-button">选择文件</button>
                     <input type="file" id="idCardFront" name="idCardFront" accept="image/jpeg,image/png" required>
@@ -281,7 +278,7 @@
 
             <div class="upload-group">
                 <label for="idCardBack">上传身份证背面照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB，需清晰展示身份证国徽面所有信息</div>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB</div>
                 <div class="file-upload-wrapper">
                     <button type="button" class="upload-button">选择文件</button>
                     <input type="file" id="idCardBack" name="idCardBack" accept="image/jpeg,image/png" required>
@@ -296,7 +293,7 @@
 
             <div class="upload-group">
                 <label for="businessLicense">上传营业执照照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过10MB，需清晰展示营业执照正本所有信息</div>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过10MB</div>
                 <div class="file-upload-wrapper">
                     <button type="button" class="upload-button">选择文件</button>
                     <input type="file" id="businessLicense" name="businessLicense" accept="image/jpeg,image/png" required>
@@ -311,7 +308,7 @@
 
             <div class="upload-group">
                 <label for="paymentQR">上传收款码照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过3MB，需清晰展示完整的收款二维码图案</div>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过3MB</div>
                 <div class="file-upload-wrapper">
                     <button type="button" class="upload-button">选择文件</button>
                     <input type="file" id="paymentQR" name="paymentQR" accept="image/jpeg,image/png" required>
@@ -326,7 +323,7 @@
 
             <div class="upload-group">
                 <label for="bankCardPhoto">上传银行储蓄卡照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB，需清晰展示银行卡正面所有信息</div>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB</div>
                 <div class="file-upload-wrapper">
                     <button type="button" class="upload-button">选择文件</button>
                     <input type="file" id="bankCardPhoto" name="bankCardPhoto" accept="image/jpeg,image/png" required>
