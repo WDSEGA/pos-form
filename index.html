@@ -100,7 +100,7 @@
 <body>
     <div class="container">
         <h1>通付宝POS申请系统</h1>
-        <form id="posForm" action="" method="POST" data-netlify="true">
+        <form id="posForm" name="posForm" method="POST" data-netlify="true" action="/?success=true">
             <input type="hidden" name="form-name" value="posForm">
             <div class="form-group">
                 <label for="merchantName">商户名称 *</label>
@@ -163,18 +163,25 @@
         <div id="successMessage" class="success-message">
             尊敬的用户，您的POS申请，我们已经收到，会有工作人员与你联系，请保持电话畅通。
         </div>
-
-
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('posForm');
             const successMessage = document.getElementById('successMessage');
-            const emailAddress = 'wdsega@126.com';
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.has('success')) {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                    window.history.replaceState({}, document.title, '/');
+                }, 8000);
+            }
 
             form.addEventListener('submit', function(e) {
-                if (validateForm()) {
-                    showSuccessMessage();
+                if (!validateForm()) {
+                    e.preventDefault();
                 }
             });
 
@@ -266,37 +273,6 @@
 
             function hideError(elementId) {
                 document.getElementById(elementId).textContent = '';
-            }
-
-            function collectFormData() {
-                const merchantName = document.getElementById('merchantName').value.trim();
-                const contactPerson = document.getElementById('contactPerson').value.trim();
-                const phone = document.getElementById('phone').value.trim();
-                const businessAddress = document.getElementById('businessAddress').value.trim();
-                const businessType = document.getElementById('businessType').value;
-                const idCard = document.getElementById('idCard').value.trim();
-                const bankCard = document.getElementById('bankCard').value.trim();
-                const bankName = document.getElementById('bankName').value.trim();
-                const submitTime = new Date().toLocaleString();
-
-                return {
-                    merchantName,
-                    contactPerson,
-                    phone,
-                    businessAddress,
-                    businessType,
-                    idCard,
-                    bankCard,
-                    bankName,
-                    submitTime
-                };
-            }
-
-            function showSuccessMessage() {
-                successMessage.style.display = 'block';
-                setTimeout(() => {
-                    successMessage.style.display = 'none';
-                }, 8000);
             }
         });
     </script>
