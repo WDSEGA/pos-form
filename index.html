@@ -108,6 +108,11 @@
             margin-bottom: 10px;
         }
 
+        .file-upload-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
         .upload-button {
             display: inline-block;
             padding: 10px 20px;
@@ -124,13 +129,14 @@
             background-color: #2980b9;
         }
 
-        .upload-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        .file-input {
-            display: none;
+        input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
         }
 
         .preview-container {
@@ -197,8 +203,12 @@
 <body>
     <div class="container">
         <h1>通付宝POS申请系统</h1>
-        <form id="posForm" name="posForm" method="POST" data-netlify="true" action="/?success=true">
+        <form id="posForm" name="posForm" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?success=true">
             <input type="hidden" name="form-name" value="posForm">
+            <p style="display:none;">
+                <label>不要填写这个: <input name="bot-field"></label>
+            </p>
+            
             <div class="form-group">
                 <label for="merchantName">商户名称 *</label>
                 <input type="text" id="merchantName" name="merchantName" required>
@@ -256,72 +266,77 @@
 
             <div class="upload-group">
                 <label for="idCardFront">上传身份证正面照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB，需清晰展示身份证人像面所有信息（姓名、身份证号码、性别、民族、出生日期、住址等）</div>
-                <input type="file" id="idCardFront" name="idCardFront" class="file-input" accept="image/jpeg,image/png" required>
-                <button type="button" class="upload-button" onclick="document.getElementById('idCardFront').click()">选择文件</button>
-                <button type="button" class="delete-btn" id="idCardFrontDelete" onclick="deleteFile('idCardFront')">删除</button>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB，需清晰展示身份证人像面所有信息</div>
+                <div class="file-upload-wrapper">
+                    <button type="button" class="upload-button">选择文件</button>
+                    <input type="file" id="idCardFront" name="idCardFront" accept="image/jpeg,image/png" required>
+                </div>
+                <button type="button" class="delete-btn" id="idCardFrontDelete">删除</button>
                 <div class="preview-container">
                     <img id="idCardFrontPreview" class="preview-image" alt="身份证正面预览">
                 </div>
                 <div class="file-info" id="idCardFrontInfo"></div>
                 <div class="upload-status" id="idCardFrontStatus"></div>
-                <input type="hidden" name="idCardFrontData" id="idCardFrontData">
             </div>
 
             <div class="upload-group">
                 <label for="idCardBack">上传身份证背面照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB，需清晰展示身份证国徽面所有信息（证件有效期、签发机关等）</div>
-                <input type="file" id="idCardBack" name="idCardBack" class="file-input" accept="image/jpeg,image/png" required>
-                <button type="button" class="upload-button" onclick="document.getElementById('idCardBack').click()">选择文件</button>
-                <button type="button" class="delete-btn" id="idCardBackDelete" onclick="deleteFile('idCardBack')">删除</button>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB，需清晰展示身份证国徽面所有信息</div>
+                <div class="file-upload-wrapper">
+                    <button type="button" class="upload-button">选择文件</button>
+                    <input type="file" id="idCardBack" name="idCardBack" accept="image/jpeg,image/png" required>
+                </div>
+                <button type="button" class="delete-btn" id="idCardBackDelete">删除</button>
                 <div class="preview-container">
                     <img id="idCardBackPreview" class="preview-image" alt="身份证背面预览">
                 </div>
                 <div class="file-info" id="idCardBackInfo"></div>
                 <div class="upload-status" id="idCardBackStatus"></div>
-                <input type="hidden" name="idCardBackData" id="idCardBackData">
             </div>
 
             <div class="upload-group">
                 <label for="businessLicense">上传营业执照照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过10MB，需清晰展示营业执照正本所有信息（企业名称、统一社会信用代码、法定代表人、注册资本、成立日期、经营范围、登记机关等）</div>
-                <input type="file" id="businessLicense" name="businessLicense" class="file-input" accept="image/jpeg,image/png" required>
-                <button type="button" class="upload-button" onclick="document.getElementById('businessLicense').click()">选择文件</button>
-                <button type="button" class="delete-btn" id="businessLicenseDelete" onclick="deleteFile('businessLicense')">删除</button>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过10MB，需清晰展示营业执照正本所有信息</div>
+                <div class="file-upload-wrapper">
+                    <button type="button" class="upload-button">选择文件</button>
+                    <input type="file" id="businessLicense" name="businessLicense" accept="image/jpeg,image/png" required>
+                </div>
+                <button type="button" class="delete-btn" id="businessLicenseDelete">删除</button>
                 <div class="preview-container">
                     <img id="businessLicensePreview" class="preview-image" alt="营业执照预览">
                 </div>
                 <div class="file-info" id="businessLicenseInfo"></div>
                 <div class="upload-status" id="businessLicenseStatus"></div>
-                <input type="hidden" name="businessLicenseData" id="businessLicenseData">
             </div>
 
             <div class="upload-group">
                 <label for="paymentQR">上传收款码照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过3MB，需清晰展示完整的收款二维码图案及相关信息</div>
-                <input type="file" id="paymentQR" name="paymentQR" class="file-input" accept="image/jpeg,image/png" required>
-                <button type="button" class="upload-button" onclick="document.getElementById('paymentQR').click()">选择文件</button>
-                <button type="button" class="delete-btn" id="paymentQRDelete" onclick="deleteFile('paymentQR')">删除</button>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过3MB，需清晰展示完整的收款二维码图案</div>
+                <div class="file-upload-wrapper">
+                    <button type="button" class="upload-button">选择文件</button>
+                    <input type="file" id="paymentQR" name="paymentQR" accept="image/jpeg,image/png" required>
+                </div>
+                <button type="button" class="delete-btn" id="paymentQRDelete">删除</button>
                 <div class="preview-container">
                     <img id="paymentQRPreview" class="preview-image" alt="收款码预览">
                 </div>
                 <div class="file-info" id="paymentQRInfo"></div>
                 <div class="upload-status" id="paymentQRStatus"></div>
-                <input type="hidden" name="paymentQRData" id="paymentQRData">
             </div>
 
             <div class="upload-group">
                 <label for="bankCardPhoto">上传银行储蓄卡照片 *</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB，需清晰展示银行卡正面所有信息（卡号、发卡银行名称、卡片类型等）</div>
-                <input type="file" id="bankCardPhoto" name="bankCardPhoto" class="file-input" accept="image/jpeg,image/png" required>
-                <button type="button" class="upload-button" onclick="document.getElementById('bankCardPhoto').click()">选择文件</button>
-                <button type="button" class="delete-btn" id="bankCardPhotoDelete" onclick="deleteFile('bankCardPhoto')">删除</button>
+                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB，需清晰展示银行卡正面所有信息</div>
+                <div class="file-upload-wrapper">
+                    <button type="button" class="upload-button">选择文件</button>
+                    <input type="file" id="bankCardPhoto" name="bankCardPhoto" accept="image/jpeg,image/png" required>
+                </div>
+                <button type="button" class="delete-btn" id="bankCardPhotoDelete">删除</button>
                 <div class="preview-container">
                     <img id="bankCardPhotoPreview" class="preview-image" alt="储蓄卡预览">
                 </div>
                 <div class="file-info" id="bankCardPhotoInfo"></div>
                 <div class="upload-status" id="bankCardPhotoStatus"></div>
-                <input type="hidden" name="bankCardPhotoData" id="bankCardPhotoData">
             </div>
 
             <button type="submit" class="submit-btn">提交申请</button>
@@ -343,9 +358,17 @@
 
         Object.keys(fileConfigs).forEach(fieldId => {
             const input = document.getElementById(fieldId);
+            const deleteBtn = document.getElementById(fieldId + 'Delete');
+            
             if (input) {
                 input.addEventListener('change', function(e) {
                     handleFileSelect(e, fieldId);
+                });
+            }
+            
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function() {
+                    deleteFile(fieldId);
                 });
             }
         });
@@ -360,7 +383,6 @@
             const infoEl = document.getElementById(fieldId + 'Info');
             const previewEl = document.getElementById(fieldId + 'Preview');
             const deleteBtn = document.getElementById(fieldId + 'Delete');
-            const dataInput = document.getElementById(fieldId + 'Data');
 
             statusEl.className = 'upload-status';
             statusEl.textContent = '';
@@ -389,7 +411,6 @@
                 previewEl.src = e.target.result;
                 previewEl.classList.add('show');
                 deleteBtn.classList.add('show');
-                dataInput.value = e.target.result;
                 statusEl.textContent = '✓ 文件已选择';
                 statusEl.classList.add('success');
             };
@@ -402,7 +423,6 @@
             const deleteBtn = document.getElementById(fieldId + 'Delete');
             const infoEl = document.getElementById(fieldId + 'Info');
             const statusEl = document.getElementById(fieldId + 'Status');
-            const dataInput = document.getElementById(fieldId + 'Data');
 
             input.value = '';
             previewEl.src = '';
@@ -411,7 +431,6 @@
             infoEl.textContent = '';
             statusEl.textContent = '';
             statusEl.className = 'upload-status';
-            dataInput.value = '';
         }
 
         function formatFileSize(bytes) {
