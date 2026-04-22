@@ -100,7 +100,7 @@
 <body>
     <div class="container">
         <h1>通付宝POS申请系统</h1>
-        <form id="posForm">
+        <form id="posForm" action="/" method="POST" data-netlify="true">
             <div class="form-group">
                 <label for="merchantName">商户名称 *</label>
                 <input type="text" id="merchantName" name="merchantName" required>
@@ -162,6 +162,8 @@
         <div id="successMessage" class="success-message">
             尊敬的用户，您的POS申请，我们已经收到，会有工作人员与你联系，请保持电话畅通。
         </div>
+
+
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -170,31 +172,8 @@
             const emailAddress = 'wdsega@126.com';
 
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
-
                 if (validateForm()) {
-                    const formData = collectFormData();
-
-                    saveData(formData);
-
-                    const subject = '通付宝POS申请 - ' + formData.merchantName + ' - ' + formData.submitTime;
-                    const body = '商户名称：' + formData.merchantName + '\n' +
-                                '联系人：' + formData.contactPerson + '\n' +
-                                '联系电话：' + formData.phone + '\n' +
-                                '经营地址：' + formData.businessAddress + '\n' +
-                                '经营类型：' + formData.businessType + '\n' +
-                                '身份证号：' + formData.idCard + '\n' +
-                                '银行卡号：' + formData.bankCard + '\n' +
-                                '开户银行：' + formData.bankName + '\n' +
-                                '提交时间：' + formData.submitTime;
-
-                    window.location.href = 'mailto:' + emailAddress + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-
                     showSuccessMessage();
-
-                    setTimeout(() => {
-                        form.reset();
-                    }, 1500);
                 }
             });
 
@@ -310,39 +289,6 @@
                     bankName,
                     submitTime
                 };
-            }
-
-            function saveData(formData) {
-                try {
-                    let data = JSON.parse(localStorage.getItem('posApplicationData')) || [];
-                    data.push(formData);
-                    localStorage.setItem('posApplicationData', JSON.stringify(data));
-                    createBackup(data);
-                } catch (error) {
-                    console.error('保存数据失败:', error);
-                }
-            }
-
-            function loadData() {
-                try {
-                    const data = JSON.parse(localStorage.getItem('posApplicationData')) || [];
-                    return data;
-                } catch (error) {
-                    console.error('加载数据失败:', error);
-                    return [];
-                }
-            }
-
-            function createBackup(data) {
-                try {
-                    const backupData = {
-                        timestamp: new Date().toISOString(),
-                        data: data
-                    };
-                    localStorage.setItem('posApplicationBackup', JSON.stringify(backupData));
-                } catch (error) {
-                    console.error('创建备份失败:', error);
-                }
             }
 
             function showSuccessMessage() {
