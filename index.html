@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS申请系统</title>
+    <title>通付宝POS申请系统</title>
     <style>
         * {
             box-sizing: border-box;
@@ -72,10 +72,10 @@
         }
 
         .error-message {
-            display: block;
             color: #e74c3c;
             font-size: 14px;
             margin-top: 5px;
+            display: block;
         }
 
         .success-message {
@@ -89,15 +89,6 @@
             font-weight: bold;
         }
 
-        .info-box {
-            background-color: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 20px;
-            color: #856404;
-        }
-
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
@@ -109,10 +100,6 @@
 <body>
     <div class="container">
         <h1>通付宝POS申请系统</h1>
-        
-        <div class="info-box">
-            <strong>温馨提示：</strong>图片上传功能暂时无法使用。请填写下方信息提交，稍后工作人员会联系您补充相关证件照片。
-        </div>
         
         <form id="posForm" name="posForm" method="POST" action="/?success=true" data-netlify="true">
             <input type="hidden" name="form-name" value="posForm">
@@ -205,89 +192,81 @@
 
                 const merchantName = document.getElementById('merchantName').value.trim();
                 if (!merchantName) {
-                    showError('merchantNameError', '请输入商户名称');
+                    document.getElementById('merchantNameError').textContent = '请输入商户名称';
                     isValid = false;
                 } else {
-                    hideError('merchantNameError');
+                    document.getElementById('merchantNameError').textContent = '';
                 }
 
                 const contactPerson = document.getElementById('contactPerson').value.trim();
                 if (!contactPerson) {
-                    showError('contactPersonError', '请输入联系人');
+                    document.getElementById('contactPersonError').textContent = '请输入联系人';
                     isValid = false;
                 } else {
-                    hideError('contactPersonError');
+                    document.getElementById('contactPersonError').textContent = '';
                 }
 
                 const phone = document.getElementById('phone').value.trim();
                 const phoneRegex = /^1[3-9]\d{9}$/;
                 if (!phone) {
-                    showError('phoneError', '请输入联系电话');
+                    document.getElementById('phoneError').textContent = '请输入联系电话';
                     isValid = false;
                 } else if (!phoneRegex.test(phone)) {
-                    showError('phoneError', '请输入有效的联系电话');
+                    document.getElementById('phoneError').textContent = '请输入有效的联系电话';
                     isValid = false;
                 } else {
-                    hideError('phoneError');
+                    document.getElementById('phoneError').textContent = '';
                 }
 
                 const businessAddress = document.getElementById('businessAddress').value.trim();
                 if (!businessAddress) {
-                    showError('businessAddressError', '请输入经营地址');
+                    document.getElementById('businessAddressError').textContent = '请输入经营地址';
                     isValid = false;
                 } else {
-                    hideError('businessAddressError');
+                    document.getElementById('businessAddressError').textContent = '';
                 }
 
                 const businessType = document.getElementById('businessType').value;
                 if (!businessType) {
-                    showError('businessTypeError', '请选择经营类型');
+                    document.getElementById('businessTypeError').textContent = '请选择经营类型';
                     isValid = false;
                 } else {
-                    hideError('businessTypeError');
+                    document.getElementById('businessTypeError').textContent = '';
                 }
 
                 const idCard = document.getElementById('idCard').value.trim();
                 const idCardRegex = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]$/;
                 if (!idCard) {
-                    showError('idCardError', '请输入身份证号');
+                    document.getElementById('idCardError').textContent = '请输入身份证号';
                     isValid = false;
                 } else if (!idCardRegex.test(idCard)) {
-                    showError('idCardError', '请输入有效的身份证号');
+                    document.getElementById('idCardError').textContent = '请输入有效的身份证号';
                     isValid = false;
                 } else {
-                    hideError('idCardError');
+                    document.getElementById('idCardError').textContent = '';
                 }
 
                 const bankCard = document.getElementById('bankCard').value.trim();
                 const bankCardRegex = /^\d{16,19}$/;
                 if (!bankCard) {
-                    showError('bankCardError', '请输入银行卡号');
+                    document.getElementById('bankCardError').textContent = '请输入银行卡号';
                     isValid = false;
                 } else if (!bankCardRegex.test(bankCard)) {
-                    showError('bankCardError', '请输入有效的银行卡号');
+                    document.getElementById('bankCardError').textContent = '请输入有效的银行卡号';
                     isValid = false;
                 } else {
-                    hideError('bankCardError');
+                    document.getElementById('bankCardError').textContent = '';
                 }
 
                 const bankName = document.getElementById('bankName').value.trim();
                 if (!bankName) {
-                    showError('bankNameError', '请输入开户银行');
+                    document.getElementById('bankNameError').textContent = '请输入开户银行';
                     isValid = false;
                 } else {
-                    hideError('bankNameError');
+                    document.getElementById('bankNameError').textContent = '';
                 }
 
                 return isValid;
-            }
-
-            function showError(elementId, message) {
-                document.getElementById(elementId).textContent = message;
-            }
-
-            function hideError(elementId) {
-                document.getElementById(elementId).textContent = '';
             }
         });
     </script>
