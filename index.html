@@ -89,107 +89,13 @@
             font-weight: bold;
         }
 
-        .upload-group {
-            margin-bottom: 20px;
+        .info-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
             padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-
-        .upload-group label {
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-
-        .upload-hint {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .file-upload-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .upload-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-
-        .upload-button:hover {
-            background-color: #2980b9;
-        }
-
-        input[type="file"] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .preview-container {
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        .preview-image {
-            max-width: 100%;
-            max-height: 300px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .preview-image.show {
-            display: block;
-        }
-
-        .delete-btn {
-            margin-top: 10px;
-            padding: 8px 20px;
-            background-color: #e74c3c;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            display: none;
-        }
-
-        .delete-btn.show {
-            display: inline-block;
-        }
-
-        .file-info {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .upload-status {
-            margin-top: 5px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .upload-status.success {
-            color: #27ae60;
-        }
-
-        .upload-status.error {
-            color: #e74c3c;
+            margin-bottom: 20px;
+            color: #856404;
         }
 
         @media (max-width: 768px) {
@@ -203,7 +109,12 @@
 <body>
     <div class="container">
         <h1>通付宝POS申请系统</h1>
-        <form id="posForm" name="posForm" method="POST" action="/?success=true" enctype="multipart/form-data" data-netlify="true">
+        
+        <div class="info-box">
+            <strong>温馨提示：</strong>图片上传功能暂时无法使用。请填写下方信息提交，稍后工作人员会联系您补充相关证件照片。
+        </div>
+        
+        <form id="posForm" name="posForm" method="POST" action="/?success=true" data-netlify="true">
             <input type="hidden" name="form-name" value="posForm">
             
             <div class="form-group">
@@ -261,21 +172,6 @@
                 <span class="error-message" id="bankNameError"></span>
             </div>
 
-            <div class="upload-group">
-                <label for="idCardFront">上传身份证正面照片 *（测试用）</label>
-                <div class="upload-hint">支持JPG、PNG格式，文件大小不超过5MB</div>
-                <div class="file-upload-wrapper">
-                    <button type="button" class="upload-button">选择文件</button>
-                    <input type="file" id="idCardFront" name="idCardFront" accept="image/jpeg,image/png" required>
-                </div>
-                <button type="button" class="delete-btn" id="idCardFrontDelete">删除</button>
-                <div class="preview-container">
-                    <img id="idCardFrontPreview" class="preview-image" alt="身份证正面预览">
-                </div>
-                <div class="file-info" id="idCardFrontInfo"></div>
-                <div class="upload-status" id="idCardFrontStatus"></div>
-            </div>
-
             <button type="submit" class="submit-btn">提交申请</button>
         </form>
 
@@ -285,85 +181,6 @@
     </div>
 
     <script>
-        const input = document.getElementById('idCardFront');
-        const deleteBtn = document.getElementById('idCardFrontDelete');
-        
-        if (input) {
-            input.addEventListener('change', function(e) {
-                handleFileSelect(e, 'idCardFront');
-            });
-        }
-        
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', function() {
-                deleteFile('idCardFront');
-            });
-        }
-
-        function handleFileSelect(event, fieldId) {
-            const file = event.target.files[0];
-            
-            if (!file) return;
-
-            const statusEl = document.getElementById(fieldId + 'Status');
-            const infoEl = document.getElementById(fieldId + 'Info');
-            const previewEl = document.getElementById(fieldId + 'Preview');
-            const deleteBtnEl = document.getElementById(fieldId + 'Delete');
-
-            statusEl.className = 'upload-status';
-            statusEl.textContent = '';
-
-            const validTypes = ['image/jpeg', 'image/png'];
-            if (!validTypes.includes(file.type)) {
-                statusEl.textContent = '错误：只支持JPG和PNG格式';
-                statusEl.classList.add('error');
-                event.target.value = '';
-                return;
-            }
-
-            const maxSizeBytes = 5 * 1024 * 1024;
-            if (file.size > maxSizeBytes) {
-                statusEl.textContent = '错误：文件大小不能超过5MB';
-                statusEl.classList.add('error');
-                event.target.value = '';
-                return;
-            }
-
-            infoEl.textContent = '文件名：' + file.name + ' | 大小：' + formatFileSize(file.size);
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewEl.src = e.target.result;
-                previewEl.classList.add('show');
-                deleteBtnEl.classList.add('show');
-                statusEl.textContent = '✓ 文件已选择';
-                statusEl.classList.add('success');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function deleteFile(fieldId) {
-            const input = document.getElementById(fieldId);
-            const previewEl = document.getElementById(fieldId + 'Preview');
-            const deleteBtnEl = document.getElementById(fieldId + 'Delete');
-            const infoEl = document.getElementById(fieldId + 'Info');
-            const statusEl = document.getElementById(fieldId + 'Status');
-
-            input.value = '';
-            previewEl.src = '';
-            previewEl.classList.remove('show');
-            deleteBtnEl.classList.remove('show');
-            infoEl.textContent = '';
-            statusEl.textContent = '';
-            statusEl.className = 'upload-status';
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' B';
-            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
-            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('posForm');
             const successMessage = document.getElementById('successMessage');
@@ -460,14 +277,6 @@
                     isValid = false;
                 } else {
                     hideError('bankNameError');
-                }
-
-                const fileInput = document.getElementById('idCardFront');
-                const fileStatus = document.getElementById('idCardFrontStatus');
-                if (!fileInput.files || !fileInput.files[0]) {
-                    fileStatus.textContent = '请上传身份证正面照片';
-                    fileStatus.classList.add('error');
-                    isValid = false;
                 }
 
                 return isValid;
